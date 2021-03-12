@@ -10,7 +10,7 @@ docker exec es01 /bin/bash -c "bin/elasticsearch-setup-passwords auto --batch --
 4. Run ```terraform init```
 5. Run ```terraform apply```. Plan output looks like this:
 
-```terraform Terraform will perform the following actions:
+```terraform
 
   # elasticsearch_xpack_user.myuser will be created
   + resource "elasticsearch_xpack_user" "myuser" {
