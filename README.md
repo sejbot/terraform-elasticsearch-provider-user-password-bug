@@ -10,7 +10,7 @@ docker exec es01 /bin/bash -c "bin/elasticsearch-setup-passwords auto --batch --
 4. Run ```terraform init```
 5. Run ```terraform apply```. Plan output looks like this:
 
-```Terraform will perform the following actions:
+```terraform Terraform will perform the following actions:
 
   # elasticsearch_xpack_user.myuser will be created
   + resource "elasticsearch_xpack_user" "myuser" {
@@ -91,7 +91,7 @@ This should give response:
 ```
 8. Add role ```kibana_admin``` to myuser in main.tf
 9. Run ```terraform apply```. Plan shows that a new role is the only thing that will change
-```
+```terraform
 elasticsearch_xpack_user.myuser: Refreshing state... [id=myuser]
 
 An execution plan has been generated and is shown below.
@@ -151,12 +151,12 @@ Plan: 0 to add, 1 to change, 0 to destroy.
   ]
 }
 ```
-
-curl http://localhost:9200 -u "myuser:mysecretpassword"                                                                                                                                ✔  12:23:18 
+11. Try to access elastic again with same username and password using ```curl http://localhost:9200 -u "myuser:mysecretpassword"``` now gives authentication exception:
+```
 {"error":{"root_cause":[{"type":"security_exception","reason":"unable to authenticate user [myuser] for REST request [/]","header":{"WWW-Authenticate":"Basic realm=\"security\" charset=\"UTF-8\""}}],"type":"security_exception","reason":"unable to authenticate user [myuser] for REST request [/]","header":{"WWW-Authenticate":"Basic realm=\"security\" charset=\"UTF-8\""}},"status":401}%
-
-
-curl http://localhost:9200 -u "myuser:94aefb8be78b2b7c344d11d1ba8a79ef087eceb19150881f69460b8772753263"                                                                                ✔  12:23:30 
+```
+12. Try to access elastic with the hashed password from the state ```curl http://localhost:9200 -u "myuser:94aefb8be78b2b7c344d11d1ba8a79ef087eceb19150881f69460b8772753263"``` is successful:
+```
 {
   "name" : "4c54de4447ff",
   "cluster_name" : "docker-cluster",
@@ -174,3 +174,4 @@ curl http://localhost:9200 -u "myuser:94aefb8be78b2b7c344d11d1ba8a79ef087eceb191
   },
   "tagline" : "You Know, for Search"
 }
+```
